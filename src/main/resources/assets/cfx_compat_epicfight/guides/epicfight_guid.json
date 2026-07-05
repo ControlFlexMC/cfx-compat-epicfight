@@ -1,0 +1,48 @@
+{
+  "mod_id": "epicfight",
+  "category_name": "cfx_compat_epicfight.guide.category.combat",
+  "guides": [
+    {
+      "id": "combat_basics",
+      "title": "cfx_compat_epicfight.guide.combat_basics",
+      "trigger": { "type": "first_join" },
+      "entries": [
+        {
+          "action": "epicfight:key.epicfight.switch_mode",
+          "label": "cfx_compat_epicfight.guide.entry.switch_mode"
+        },
+        {
+          "action": "epicfight:key.epicfight.attack",
+          "label": "cfx_compat_epicfight.guide.entry.attack"
+        },
+        {
+          "action": "epicfight:key.epicfight.dodge",
+          "label": "cfx_compat_epicfight.guide.entry.dodge"
+        },
+        {
+          "action": "epicfight:key.epicfight.guard",
+          "label": "cfx_compat_epicfight.guide.entry.guard"
+        }
+      ]
+    },
+    {
+      "id": "combat_advanced",
+      "title": "cfx_compat_epicfight.guide.combat_advanced",
+      "trigger": { "type": "none" },
+      "entries": [
+        {
+          "action": "epicfight:key.epicfight.weapon_innate_skill",
+          "label": "cfx_compat_epicfight.guide.entry.weapon_innate_skill"
+        },
+        {
+          "action": "epicfight:key.epicfight.lock_on",
+          "label": "cfx_compat_epicfight.guide.entry.lock_on"
+        },
+        {
+          "action": "epicfight:key.epicfight.mover_skill",
+          "label": "cfx_compat_epicfight.guide.entry.mover_skill"
+        }
+      ]
+    }
+  ]
+}

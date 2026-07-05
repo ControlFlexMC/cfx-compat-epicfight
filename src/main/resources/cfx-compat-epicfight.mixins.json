@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.ifels.cfx.epicfight.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "cfx_compat_epicfight.refmap.json",
+  "client": [
+    "EpicFightInputActionMixin",
+    "MinecraftInputActionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

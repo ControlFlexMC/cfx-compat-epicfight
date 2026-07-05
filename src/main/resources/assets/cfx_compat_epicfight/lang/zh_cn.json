@@ -1,0 +1,12 @@
+{
+  "cfx_compat_epicfight.guide.category.combat": "战斗操作",
+  "cfx_compat_epicfight.guide.combat_basics": "基础战斗",
+  "cfx_compat_epicfight.guide.combat_advanced": "进阶战斗",
+  "cfx_compat_epicfight.guide.entry.switch_mode": "切换战斗 / 挖掘模式",
+  "cfx_compat_epicfight.guide.entry.attack": "攻击",
+  "cfx_compat_epicfight.guide.entry.dodge": "闪避",
+  "cfx_compat_epicfight.guide.entry.guard": "格挡",
+  "cfx_compat_epicfight.guide.entry.weapon_innate_skill": "武器固有技能",
+  "cfx_compat_epicfight.guide.entry.lock_on": "锁定目标",
+  "cfx_compat_epicfight.guide.entry.mover_skill": "行动技能"
+}

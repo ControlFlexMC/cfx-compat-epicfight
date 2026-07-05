@@ -1,0 +1,93 @@
+plugins {
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+base {
+    archivesName = 'cfx-compat-epicfight'
+}
+
+def isRelease = project.hasProperty('release')
+def modArtifactVersion = (isRelease || !build_id) ? mod_version : "${mod_version}.${build_id}"
+version = "${modArtifactVersion}-mc${minecraft_version}-forge"
+group = maven_group
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
+}
+
+mixin {
+    add sourceSets.main, 'cfx_compat_epicfight.refmap.json'
+    config 'cfx-compat-epicfight.mixins.json'
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+
+    runs {
+        client {
+            client()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://cursemaven.com' }
+}
+
+dependencies {
+    // controlflex-api 0.8.5 — build with `./gradlew :api:build` in ControlFlex repo,
+    // then copy api/build/libs/controlflex-api-0.8.5.jar here. Or use mavenLocal.
+    compileOnly fileTree(dir: 'libs', include: ['controlflex-api-*.jar'])
+    // EpicFight 20.14.17 for Minecraft 1.20.1 Forge
+    // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7789099
+    compileOnly 'curse.maven:epicfight-405076:7789099'
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+
+    annotationProcessor "org.spongepowered:mixin:${mixin_processor_version}:processor"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    def expandProps = [
+        'mod_id'                 : mod_id,
+        'mod_name'               : mod_name,
+        'mod_version'            : mod_version,
+        'mod_authors'            : mod_authors,
+        'mod_license'            : mod_license,
+        'mod_description'        : mod_description,
+        'minecraft_version'      : minecraft_version,
+        'minecraft_version_range': minecraft_version_range,
+        'forge_version'          : forge_version,
+        'forge_version_range'    : forge_version_range,
+        'loader_version_range'   : loader_version_range,
+        'java_version'           : java_version,
+        'controlflex_mod_id'     : controlflex_mod_id,
+    ]
+
+    filesMatching(['pack.mcmeta', 'META-INF/mods.toml', '*.mixins.json']) {
+        expand expandProps
+    }
+
+    inputs.properties(expandProps)
+}
+
+jar {
+    manifest {
+        attributes([
+            'MixinConfigs': 'cfx-compat-epicfight.mixins.json'
+        ])
+    }
+
+    from(file('LICENSE')) { rename { "${it}_${mod_id}" } }
+    finalizedBy 'reobfJar'
+}

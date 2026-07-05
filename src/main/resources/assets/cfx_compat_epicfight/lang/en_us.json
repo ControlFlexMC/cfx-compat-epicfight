@@ -1,0 +1,12 @@
+{
+  "cfx_compat_epicfight.guide.category.combat": "Combat Controls",
+  "cfx_compat_epicfight.guide.combat_basics": "Basic Combat",
+  "cfx_compat_epicfight.guide.combat_advanced": "Advanced Combat",
+  "cfx_compat_epicfight.guide.entry.switch_mode": "Switch combat / mining mode",
+  "cfx_compat_epicfight.guide.entry.attack": "Attack",
+  "cfx_compat_epicfight.guide.entry.dodge": "Dodge",
+  "cfx_compat_epicfight.guide.entry.guard": "Guard",
+  "cfx_compat_epicfight.guide.entry.weapon_innate_skill": "Weapon innate skill",
+  "cfx_compat_epicfight.guide.entry.lock_on": "Lock on target",
+  "cfx_compat_epicfight.guide.entry.mover_skill": "Mobility skill"
+}
