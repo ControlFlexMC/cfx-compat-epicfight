@@ -38,14 +38,6 @@
           }
         }
       ]
-    },
-    {
-      "version": "",
-      "ignoreKeys": [],
-      "guiKeys": [],
-      "skipForgeKeys": [],
-      "skipVanillaKeys": [],
-      "tips": []
     }
   ]
 }
