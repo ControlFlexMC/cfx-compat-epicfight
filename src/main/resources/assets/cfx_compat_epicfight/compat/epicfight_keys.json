@@ -1,9 +1,11 @@
 {
   "mod_id": "epicfight",
-  "loader": ["forge"],
+  "mod_name": "Epic Fight",
+  "home_page": "https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod",
+  "loader": "forge",
   "versions": [
     {
-      "version": "",
+      "version": "[20.14, )",
       "ignoreKeys": [
         "key.epicfight.switch_vanilla_model_debug",
         "key.epicfight.config"
@@ -25,50 +27,25 @@
       ],
       "skipVanillaKeys": [
       ],
-      "specialActionKeys": [
-        {
-          "keyName": "key.epicfight.guard",
-          "flags": ["PHASE_PERSISTENT"]
-        }
-      ],
       "itemSuppressKeys": [
-        {
-          "item": "epicfight:uchigatana",
-          "suppressActions": ["attack"]
-        },
-        {
-          "item": "epicfight:katana",
-          "suppressActions": ["attack"]
-        },
-        {
-          "tag": "epicfight:two_hand_weapons",
-          "playerState": ["epicfight:battle_mode"],
-          "suppressActions": ["attack"]
-        }
       ],
       "tips": [
         {
           "key": "key.epicfight.weapon_innate_skill",
           "text": {
-            "en_us": "Bind to same key as Attack, use HOLD mode for weapon special attacks",
-            "zh_cn": "绑定为与'攻击'相同的按键，使用 HOLD 模式触发武器特殊攻击"
-          }
-        },
-        {
-          "key": "key.epicfight.guard",
-          "text": {
-            "en_us": "Use HOLD mode — guard stays active while button is held",
-            "zh_cn": "使用 HOLD 模式 — 按住按键持续防御"
-          }
-        },
-        {
-          "key": "key.epicfight.dodge",
-          "text": {
-            "en_us": "Tap to dodge; combine with left stick direction for directional dodge",
-            "zh_cn": "点击闪避；配合左摇杆方向进行定向闪避"
+            "en_us": "If weapon special attack doesn't work, bind this to the same key as Attack and use HOLD mode",
+            "zh_cn": "若武器特殊攻击无法触发，请将其绑定为与'攻击'相同的按键，并使用 HOLD 模式"
           }
         }
       ]
+    },
+    {
+      "version": "",
+      "ignoreKeys": [],
+      "guiKeys": [],
+      "skipForgeKeys": [],
+      "skipVanillaKeys": [],
+      "tips": []
     }
   ]
 }
