@@ -26,12 +26,38 @@ public class CfxEpicFightControllerMod implements IEpicFightControllerMod {
         return "ControlFlex";
     }
 
+    // ControlFlex action IDs for EpicFight's attack / weapon-innate-skill keys.
+    // These MUST match the IDs registered in ActionBindingMapper.
+    private static final String CFX_ACTION_ATTACK = "epicfight:key.epicfight.attack";
+    private static final String CFX_ACTION_WEAPON_INNATE = "epicfight:key.epicfight.weapon_innate_skill";
+
     @Override
     public @NotNull InputMode getInputMode() {
+        // 1. No controller connected: keyboard/mouse only.
         if (!ControlFlexApi.isAvailable() || !ControlFlexApi.isControllerConnected()) {
             return InputMode.KEYBOARD_MOUSE;
         }
+        // 2. The controller is pressing attack or weapon-innate-skill right now: switch
+        //    to CONTROLLER so EpicFight's InputManager.isBoundToSamePhysicalInput()
+        //    compares our per-action physicalInputId() (unique) instead of the shared
+        //    left-mouse KeyMapping, letting the two fire independently on different
+        //    controller buttons.
+        if (isControllerAttackOrInnateActive()) {
+            return InputMode.CONTROLLER;
+        }
+        // 3. Otherwise MIXED: keyboard/mouse and controller both remain usable.
         return InputMode.MIXED;
+    }
+
+    /** True when ControlFlex reports the controller is currently driving EpicFight's
+     *  attack or weapon-innate-skill action. */
+    private static boolean isControllerAttackOrInnateActive() {
+        IActionStateProvider actions = ControlFlexApi.getActionStateProvider();
+        if (actions == null) {
+            return false;
+        }
+        return actions.isGameActionActive(CFX_ACTION_ATTACK)
+                || actions.isGameActionActive(CFX_ACTION_WEAPON_INNATE);
     }
 
     @Override
