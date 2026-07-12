@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.moddev.legacyforge'
+    id 'net.neoforged.moddev'
 }
 
 base {
@@ -8,20 +8,15 @@ base {
 
 def isRelease = project.hasProperty('release')
 def modArtifactVersion = (isRelease || !build_id) ? mod_version : "${mod_version}.${build_id}"
-version = "${modArtifactVersion}-mc${minecraft_version}-forge"
+version = "${modArtifactVersion}-mc${minecraft_version}-neoforge"
 group = maven_group
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 }
 
-mixin {
-    add sourceSets.main, 'cfx_compat_epicfight.refmap.json'
-    config 'cfx-compat-epicfight.mixins.json'
-}
-
-legacyForge {
-    version = "${minecraft_version}-${forge_version}"
+neoForge {
+    version = neoforge_version
 
     runs {
         client {
@@ -45,9 +40,9 @@ dependencies {
     // controlflex-api 0.8.5 — build with `./gradlew :api:build` in ControlFlex repo,
     // then copy api/build/libs/controlflex-api-0.8.5.jar here. Or use mavenLocal.
     compileOnly fileTree(dir: 'libs', include: ['controlflex-api-*.jar'])
-    // EpicFight 20.14.17 for Minecraft 1.20.1 Forge
-    // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7789099
-    compileOnly 'curse.maven:epicfight-405076:7789099'
+    // EpicFight 21.15.1 for Minecraft 1.21.1 NeoForge
+    // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7489617
+    compileOnly 'curse.maven:epicfight-405076:7489617'
     compileOnly 'org.jetbrains:annotations:24.0.1'
 
     annotationProcessor "org.spongepowered:mixin:${mixin_processor_version}:processor"
@@ -67,14 +62,14 @@ processResources {
         'mod_description'        : mod_description,
         'minecraft_version'      : minecraft_version,
         'minecraft_version_range': minecraft_version_range,
-        'forge_version'          : forge_version,
-        'forge_version_range'    : forge_version_range,
+        'neoforge_version'       : neoforge_version,
+        'neoforge_version_range' : neoforge_version_range,
         'loader_version_range'   : loader_version_range,
         'java_version'           : java_version,
         'controlflex_mod_id'     : controlflex_mod_id,
     ]
 
-    filesMatching(['pack.mcmeta', 'META-INF/mods.toml', '*.mixins.json']) {
+    filesMatching(['pack.mcmeta', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
         expand expandProps
     }
 
@@ -82,12 +77,5 @@ processResources {
 }
 
 jar {
-    manifest {
-        attributes([
-            'MixinConfigs': 'cfx-compat-epicfight.mixins.json'
-        ])
-    }
-
     from(file('LICENSE')) { rename { "${it}_${mod_id}" } }
-    finalizedBy 'reobfJar'
 }

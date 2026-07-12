@@ -1,13 +1,13 @@
 package com.ifels.cfx.epicfight;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import yesman.epicfight.api.client.input.action.EpicFightInputAction;
@@ -15,7 +15,7 @@ import yesman.epicfight.api.client.input.controller.EpicFightControllerModProvid
 
 import java.util.Optional;
 
-@Mod(CfxEpicFightMod.MOD_ID)
+@Mod(value = CfxEpicFightMod.MOD_ID, dist = Dist.CLIENT)
 public class CfxEpicFightMod {
     public static final String MOD_ID = "cfx_compat_epicfight";
     private static final Logger LOGGER = LogManager.getLogger("cfx-compat-epicfight");
@@ -26,12 +26,9 @@ public class CfxEpicFightMod {
         return clientTickCounter;
     }
 
-    public CfxEpicFightMod() {
-        if (FMLEnvironment.dist != Dist.CLIENT) {
-            return;
-        }
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(this);
+    public CfxEpicFightMod(IEventBus modEventBus) {
+        modEventBus.addListener(this::onClientSetup);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
@@ -45,8 +42,8 @@ public class CfxEpicFightMod {
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END && Minecraft.getInstance() != null) {
+    public void onClientTick(ClientTickEvent.Post event) {
+        if (Minecraft.getInstance() != null) {
             clientTickCounter++;
             CfxEpicFightPlugin plugin = CfxEpicFightPlugin.getInstance();
             if (plugin != null) {

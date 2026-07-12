@@ -43,12 +43,12 @@ public class ActionBindingMapper {
 
     private void registerDigital(InputAction action, String cfxActionId, boolean isGuiAction) {
         String path = cfxActionId.replace(":", "_").replace(".", "_").toLowerCase();
-        ResourceLocation id = new ResourceLocation(CfxEpicFightMod.MOD_ID, path);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(CfxEpicFightMod.MOD_ID, path);
         bindings.put(action, new CfxControllerBinding(id, cfxActionId, isGuiAction));
     }
 
     private void registerMovement(InputAction action, CfxMovementBinding.Direction dir) {
-        ResourceLocation id = new ResourceLocation(CfxEpicFightMod.MOD_ID, "move_" + dir.name().toLowerCase());
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(CfxEpicFightMod.MOD_ID, "move_" + dir.name().toLowerCase());
         bindings.put(action, new CfxMovementBinding(id, dir));
     }
 

@@ -4,12 +4,13 @@ import com.ifels.controlflex.api.ControlFlexApi;
 import com.ifels.controlflex.api.IPlayerStateRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.EventPriority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import yesman.epicfight.api.forgeevent.ChangePlayerModeEvent;
+import yesman.epicfight.api.event.EpicFightEventHooks;
+import yesman.epicfight.api.event.types.player.TogglePlayerModeEvent;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
@@ -38,9 +39,10 @@ public class EpicFightStateBridge {
         epicFightMode = queryCurrentMode();
         pushState();
 
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, false,
-                ChangePlayerModeEvent.class, this::onPlayerModeChanged);
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false,
+        // EpicFight 21.17+ moved mode toggling to its own event system (TogglePlayerModeEvent).
+        // Register at the lowest priority so we observe the final (post-cancellation) outcome.
+        EpicFightEventHooks.Player.TOGGLE_MODE.registerEvent(this::onPlayerModeChanged, Integer.MIN_VALUE);
+        NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, false,
                 ClientPlayerNetworkEvent.LoggingIn.class, this::onClientPlayerLoggingIn);
 
         LOGGER.info("[EpicFightStateBridge] Initialized, initial epicFightMode={}", epicFightMode);
@@ -66,14 +68,20 @@ public class EpicFightStateBridge {
                 LOGIN_QUERY_DELAY_TICKS);
     }
 
-    private void onPlayerModeChanged(ChangePlayerModeEvent event) {
-        boolean oldState = epicFightMode;
-
+    private void onPlayerModeChanged(TogglePlayerModeEvent event) {
+        // TOGGLE_MODE fires for every player patch on this side; only track the local player.
+        // The event is posted before the patch's mode is applied and only takes effect when
+        // not canceled, so read the target mode from the event rather than re-querying the patch.
         if (event.isCanceled()) {
-            epicFightMode = queryCurrentMode();
-        } else {
-            epicFightMode = event.getPlayerMode() == PlayerPatch.PlayerMode.EPICFIGHT;
+            return;
         }
+        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        if (localPlayer == null || event.getPlayerPatch().getOriginal() != localPlayer) {
+            return;
+        }
+
+        boolean oldState = epicFightMode;
+        epicFightMode = event.getPlayerMode() == PlayerPatch.PlayerMode.EPICFIGHT;
 
         if (oldState != epicFightMode) {
             pushState();
