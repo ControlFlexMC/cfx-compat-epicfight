@@ -29,15 +29,7 @@
       ],
       "itemSuppressKeys": [
       ],
-      "tips": [
-        {
-          "key": "key.epicfight.weapon_innate_skill",
-          "text": {
-            "en_us": "If weapon special attack doesn't work, bind this to the same key as Attack and use HOLD mode",
-            "zh_cn": "若武器特殊攻击无法触发，请将其绑定为与'攻击'相同的按键，并使用 HOLD 模式"
-          }
-        }
-      ]
+      "tips": []
     }
   ]
 }
