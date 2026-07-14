@@ -1,5 +1,6 @@
 package com.ifels.cfx.epicfight;
 
+import com.ifels.controlflex.api.ControlFlexApi;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -36,6 +37,10 @@ public class CfxEpicFightMod {
 
     private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            // registerPlugin can be called from anywhere —
+            // discoverPlugins() now waits for FMLLoadCompleteEvent
+            ControlFlexApi.registerPlugin(new CfxEpicFightPlugin());
+
             CfxEpicFightControllerMod impl = new CfxEpicFightControllerMod();
             EpicFightControllerModProvider.set(MOD_ID, impl);
             LOGGER.info("Registered ControlFlex as EpicFight controller mod");

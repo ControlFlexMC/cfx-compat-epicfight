@@ -27,7 +27,7 @@ side="CLIENT"
 [[dependencies.${mod_id}]]
 modId="${controlflex_mod_id}"
 mandatory=true
-versionRange="[0.8.5,)"
+versionRange="[0.9.0,)"
 ordering="AFTER"
 side="CLIENT"
 

@@ -42,8 +42,8 @@ repositories {
 }
 
 dependencies {
-    // controlflex-api 0.8.5 — build with `./gradlew :api:build` in ControlFlex repo,
-    // then copy api/build/libs/controlflex-api-0.8.5.jar here. Or use mavenLocal.
+    // controlflex-api 0.9.1 — build with `./gradlew build` in control-flex-api repo,
+    // then copy build/libs/controlflex-api-0.9.1.jar here.
     compileOnly fileTree(dir: 'libs', include: ['controlflex-api-*.jar'])
     // EpicFight 20.14.17 for Minecraft 1.20.1 Forge
     // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7789099

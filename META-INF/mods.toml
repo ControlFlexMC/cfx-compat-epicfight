@@ -1,0 +1,16 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT"
+
+[[mods]]
+modId = "cfx_compat_epicfight"
+version = "0.9.0"
+displayName = "Control Flex x Epic Fight"
+description = """Epic Fight controller bridge for ControlFlex"""
+
+[[dependencies.cfx_compat_epicfight]]
+    modId = "controlflex"
+    mandatory = true
+    versionRange = "[0.9,)"
+    ordering = "AFTER"
+    side = "CLIENT"
