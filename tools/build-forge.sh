@@ -2,19 +2,19 @@
 #
 # cfx-compat-epicfight — Build and Deploy (Forge)
 #
-# 用法:
+# Usage:
 #   chmod +x tools/build-forge.sh
 #   ./tools/build-forge.sh
 #   ./tools/build-forge.sh --release
 #   ./tools/build-forge.sh --clean
 #   ./tools/build-forge.sh --clean-cfg
 #
-# 功能: 递增 build_id → 构建 → 清理实例 → 部署
-#       版本: mod_version (人工维护) + build_id (自动递增)
-#       --release: 产物版本为 mod_version，忽略 build_id
-#       --clean:    构建前先执行 gradle clean
-#       --clean-cfg:同时清理 config 目录下的 cfx_compat_epicfight 配置文件
-#       默认 (dev): 产物版本为 mod_version.build_id
+# Function: increment build_id → build → clean instance → deploy
+#       Version: mod_version (manual) + build_id (auto-increment)
+#       --release: artifact version = mod_version, ignores build_id
+#       --clean:    run gradle clean before building
+#       --clean-cfg:also clean cfx_compat_epicfight config files in config dir
+#       Default (dev): artifact version = mod_version.build_id
 
 set -euo pipefail
 
@@ -33,14 +33,14 @@ for arg in "$@"; do
             CLEAN_CFG=true
             ;;
         *)
-            echo "❌ 未知参数: ${arg}"
-            echo "用法: $0 [--release] [--clean] [--clean-cfg]"
+            echo "❌ Unknown argument: ${arg}"
+            echo "Usage: $0 [--release] [--clean] [--clean-cfg]"
             exit 1
             ;;
     esac
 done
 
-# ── 配置 ──────────────────────────────────────
+# ── Config ──────────────────────────────────────
 TOOLS_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "${TOOLS_DIR}/.." && pwd)"
 PROPS_FILE="${PROJECT_DIR}/gradle.properties"
@@ -50,7 +50,7 @@ MODS_DIR="${MC_INSTANCE}/mods"
 LOGS_DIR="${MC_INSTANCE}/logs"
 CONFIG_PREFIX="cfx_compat_epicfight"
 
-# ── 辅助函数 ──────────────────────────────────
+# ── Helper Functions ────────────────────────────
 log_step() {
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -66,54 +66,54 @@ log_info() {
 # shellcheck source=build-version-lib.sh
 source "${TOOLS_DIR}/build-version-lib.sh"
 
-# ── Step 1: 读取当前版本号 ─────────────────────
-log_step "1/5" "读取当前版本号"
+# ── Step 1: Read current version ────────────────
+log_step "1/5" "Read current version"
 
 MOD_VERSION=$(read_prop mod_version)
 CURRENT_BUILD_ID=$(read_prop build_id)
 log_info "mod_version: ${MOD_VERSION}"
 log_info "build_id:    ${CURRENT_BUILD_ID}"
 if [[ "${RELEASE_MODE}" == "true" ]]; then
-    log_info "模式: release (版本 = mod_version)"
+    log_info "Mode: release (version = mod_version)"
 else
-    log_info "模式: dev (版本 = mod_version.build_id)"
+    log_info "Mode: dev (version = mod_version.build_id)"
 fi
 
-# ── Step 2: 递增 build_id ─────────────────
-log_step "2/5" "递增 build_id"
+# ── Step 2: Increment build_id ──────────────────
+log_step "2/5" "Increment build_id"
 
 NEW_BUILD_ID=$((CURRENT_BUILD_ID + 1))
 ARTIFACT_VERSION="$(compute_artifact_version "${MOD_VERSION}" "${NEW_BUILD_ID}" "${RELEASE_MODE}")"
 
 log_info "build_id: ${CURRENT_BUILD_ID} → ${NEW_BUILD_ID}"
-log_info "产物版本: ${ARTIFACT_VERSION}"
+log_info "Artifact version: ${ARTIFACT_VERSION}"
 
 update_prop build_id "${CURRENT_BUILD_ID}" "${NEW_BUILD_ID}"
-log_info "gradle.properties 已更新"
+log_info "gradle.properties updated"
 
-# ── Step 3: 构建 ────────────────
-log_step "3/5" "编译 Forge Mod JAR"
+# ── Step 3: Build ───────────────────────────────
+log_step "3/5" "Build Forge Mod JAR"
 
 cd "${PROJECT_DIR}"
 
-# 可选: gradle clean
+# Optional: gradle clean
 if [[ "${CLEAN}" == "true" ]]; then
-    log_info "执行 gradle clean..."
+    log_info "Running gradle clean..."
     ./gradlew clean
 fi
 
-# 构建
+# Build
 if [[ "${RELEASE_MODE}" == "true" ]]; then
     if ! ./gradlew build -Prelease; then
         echo ""
-        echo "❌ 编译失败！正在回滚 build_id..."
+        echo "❌ Build failed! Rolling back build_id..."
         update_prop build_id "${NEW_BUILD_ID}" "${CURRENT_BUILD_ID}"
         exit 1
     fi
 else
     if ! ./gradlew build; then
         echo ""
-        echo "❌ 编译失败！正在回滚 build_id..."
+        echo "❌ Build failed! Rolling back build_id..."
         update_prop build_id "${NEW_BUILD_ID}" "${CURRENT_BUILD_ID}"
         exit 1
     fi
@@ -122,47 +122,47 @@ fi
 MC_VER=$(read_prop minecraft_version)
 NEW_JAR="${BUILD_DIR}/cfx-compat-epicfight-${ARTIFACT_VERSION}-mc${MC_VER}-forge.jar"
 if [ ! -f "${NEW_JAR}" ]; then
-    echo "❌ JAR 文件未找到: ${NEW_JAR}"
+    echo "❌ JAR file not found: ${NEW_JAR}"
     exit 1
 fi
 
 JAR_SIZE=$(du -h "${NEW_JAR}" | cut -f1 | tr -d ' ')
-log_info "构建成功: cfx-compat-epicfight-${ARTIFACT_VERSION}-mc${MC_VER}-forge.jar (${JAR_SIZE})"
+log_info "Build successful: cfx-compat-epicfight-${ARTIFACT_VERSION}-mc${MC_VER}-forge.jar (${JAR_SIZE})"
 
-# ── Step 4: 清理实例 ──────────────────
-log_step "4/5" "清理实例"
+# ── Step 4: Clean instance ──────────────────────
+log_step "4/5" "Clean instance"
 
-# 4a: 清空日志
+# 4a: Clear logs
 if [ -d "${LOGS_DIR}" ]; then
     rm -rf "${LOGS_DIR}"/*
-    log_info "已清空日志: ${LOGS_DIR}"
+    log_info "Logs cleared: ${LOGS_DIR}"
 else
-    log_info "日志目录不存在，跳过"
+    log_info "Logs directory does not exist, skipping"
 fi
 
-# 4b: 清空崩溃报告
+# 4b: Clear crash reports
 CRASH_DIR="${MC_INSTANCE}/crash-reports"
 if [ -d "${CRASH_DIR}" ]; then
     rm -rf "${CRASH_DIR}"/*
-    log_info "已清空崩溃报告: ${CRASH_DIR}"
+    log_info "Crash reports cleared: ${CRASH_DIR}"
 else
-    log_info "崩溃报告目录不存在，跳过"
+    log_info "Crash reports directory does not exist, skipping"
 fi
 
-# 4c: 删除旧版本 Mod
+# 4c: Remove old Mod versions
 if [ -d "${MODS_DIR}" ]; then
     OLD_JARS=$(find "${MODS_DIR}" -name 'cfx-compat-epicfight-*-mc*-forge.jar' 2>/dev/null || true)
     if [ -n "${OLD_JARS}" ]; then
         rm -f "${MODS_DIR}"/cfx-compat-epicfight-*-mc*-forge.jar
-        log_info "已删除旧版本 Mod"
+        log_info "Old Mod versions removed"
     else
-        log_info "无旧版本 Mod 需要删除"
+        log_info "No old Mod versions to remove"
     fi
 else
-    log_info "Mods 目录不存在，跳过"
+    log_info "Mods directory does not exist, skipping"
 fi
 
-# 4d: 删除配置文件（仅 --clean-cfg 时）
+# 4d: Remove config files (only with --clean-cfg)
 if [[ "${CLEAN_CFG}" == "true" ]]; then
     CONFIG_FILES=$(find "${MC_INSTANCE}" -maxdepth 2 -name "${CONFIG_PREFIX}*" -not -name "*.jar" 2>/dev/null || true)
     if [ -n "${CONFIG_FILES}" ]; then
@@ -172,29 +172,29 @@ if [[ "${CLEAN_CFG}" == "true" ]]; then
             else
                 rm -f "${f}"
             fi
-            log_info "已删除: ${f}"
+            log_info "Deleted: ${f}"
         done
     else
-        log_info "无配置文件需要删除"
+        log_info "No config files to remove"
     fi
 else
-    log_info "保留 config 配置 (使用 --clean-cfg 可清理)"
+    log_info "Keeping config files (use --clean-cfg to clean)"
 fi
 
-# ── Step 5: 部署 ──────────────────
-log_step "5/5" "部署到实例"
+# ── Step 5: Deploy ──────────────────────────────
+log_step "5/5" "Deploy to instance"
 
 mkdir -p "${MODS_DIR}"
 cp "${NEW_JAR}" "${MODS_DIR}/"
 
 echo ""
 echo "╔══════════════════════════════════════════════════╗"
-echo "║  ✅ cfx-compat-epicfight 部署成功！              ║"
+echo "║  ✅ cfx-compat-epicfight deployed successfully!  ║"
 echo "╠══════════════════════════════════════════════════╣"
-echo "║  版本:   ${ARTIFACT_VERSION}                            ║"
-echo "║  JAR:    cfx-compat-epicfight-${ARTIFACT_VERSION}-mc${MC_VER}-forge.jar        ║"
-echo "║  大小:   ${JAR_SIZE}                                 ║"
-echo "║  路径:   ${MODS_DIR}  ║"
+echo "║  Version: ${ARTIFACT_VERSION}                            ║"
+echo "║  JAR:     cfx-compat-epicfight-${ARTIFACT_VERSION}-mc${MC_VER}-forge.jar        ║"
+echo "║  Size:    ${JAR_SIZE}                                 ║"
+echo "║  Path:    ${MODS_DIR}  ║"
 echo "╚══════════════════════════════════════════════════╝"
 echo ""
-echo "🚀 启动 Minecraft Forge 1.20.1 即可测试"
+echo "🚀 Launch Minecraft Forge 1.20.1 to test"

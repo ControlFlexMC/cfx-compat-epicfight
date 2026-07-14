@@ -37,14 +37,15 @@ legacyForge {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url 'https://cursemaven.com' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    // controlflex-api 0.9.1 — build with `./gradlew build` in control-flex-api repo,
-    // then copy build/libs/controlflex-api-0.9.1.jar here.
-    compileOnly fileTree(dir: 'libs', include: ['controlflex-api-*.jar'])
+    // control-flex-api (JitPack)
+    compileOnly "com.github.ControlFlexMC:control-flex-api:${api_version}"
     // EpicFight 20.14.17 for Minecraft 1.20.1 Forge
     // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7789099
     compileOnly 'curse.maven:epicfight-405076:7789099'
