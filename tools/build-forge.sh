@@ -30,10 +30,8 @@ done
 mod_version=$(grep -E '^mod_version=' gradle.properties | cut -d= -f2)
 
 if $RELEASE; then
-    gradle_args=(-Prelease)
     label="${mod_version}"
 else
-    gradle_args=()
     build_id=$(grep -E '^build_id=' gradle.properties | cut -d= -f2)
     label="${mod_version}.${build_id}"
 fi
@@ -46,7 +44,10 @@ if $CLEAN; then
     ./gradlew clean
 fi
 
-gradle_cmd=(./gradlew build "${gradle_args[@]}")
+gradle_cmd=(./gradlew build)
+if $RELEASE; then
+    gradle_cmd+=(-Prelease)
+fi
 if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then
     gradle_cmd+=("${EXTRA_ARGS[@]}")
 fi
