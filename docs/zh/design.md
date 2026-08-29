@@ -66,10 +66,10 @@ Epic Fight 有自己的手柄抽象层（`IEpicFightControllerMod` SPI）。启�
 ### CfxEpicFightPlugin — ControlFlex SPI 插件
 
 - 实现 `IControlFlexPlugin` 进行生命周期集成：
-  - `onInstallCompatConfigs` → 部署 `epicfight_keys.json` 到 `config/controlflex/compat/cfx-mod/`。
-  - `onInstallGuideAssets` → 部署 `epicfight_guid.json` 到 `config/controlflex/guides/cfx-mod/`。
+  - `onInstallCompatConfigs` → 部署 `epicfight.json` 到 `config/controlflex/compat/mods/`。该文件每次启动按 SHA-1 与打包资源对齐；`mods/` 下残留的 `epicfight_keys.json` 会被删除。不修改 `compat/user/`。
+  - `onInstallGuideAssets` → 部署 `epicfight_guid.json` 到 `config/controlflex/guides/mods/`。
   - `onControlFlexReady` → API provider 就绪后初始化状态桥。
-- 版本检查 ControlFlex API ≥ 0.8.5。
+- 版本检查 ControlFlex API ≥ 0.8.7。
 
 ### CfxEpicFightControllerMod — 控制器模组实现
 

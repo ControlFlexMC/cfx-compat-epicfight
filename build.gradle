@@ -32,24 +32,29 @@ neoForge {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven { url 'https://jitpack.io' }
     maven { url 'https://cursemaven.com' }
 }
 
 dependencies {
-    // controlflex-api 0.8.5 — build with `./gradlew :api:build` in ControlFlex repo,
-    // then copy api/build/libs/controlflex-api-0.8.5.jar here. Or use mavenLocal.
-    compileOnly fileTree(dir: 'libs', include: ['controlflex-api-*.jar'])
+    compileOnly 'com.github.ControlFlexMC:control-flex-api:0.8.7'
     // EpicFight 21.15.1 for Minecraft 1.21.1 NeoForge
     // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7489617
     compileOnly 'curse.maven:epicfight-405076:7489617'
     compileOnly 'org.jetbrains:annotations:24.0.1'
 
     annotationProcessor "org.spongepowered:mixin:${mixin_processor_version}:processor"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 processResources {

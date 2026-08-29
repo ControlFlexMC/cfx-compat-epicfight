@@ -191,9 +191,9 @@ This handles:
 
 ## Compat JSON Highlights
 
-The bundled `epicfight_keys.json` does the heavy lifting for key routing. Key decisions:
+The bundled `epicfight.json` does the heavy lifting for key routing (ControlFlex 0.8.7 schema). Key decisions:
 
-- **`skipForgeKeys` on all combat actions** — Epic Fight listens on both `KeyMapping.setPressed()` and Forge `InputEvent`. Without `skipForgeKeys`, every action fires twice per press.
-- **`specialActionKeys` with `PHASE_PERSISTENT` on guard** — guard must stay held when a screen opens (inventory etc.), otherwise the player drops guard and gets hit.
-- **`itemSuppressKeys`** — suppresses vanilla `attack` while holding two-hand weapons in battle mode, preventing conflicts between Epic Fight's attack system and vanilla left-click.
-- **`guiKeys` for `show_tooltip`** — tooltip display is a GUI-layer action; it should only activate while a screen is open (skill screen, inventory).
+- **`inGameKeys` with `channels: ["keyMapping"]` on combat actions** — Epic Fight listens on both `KeyMapping.setPressed()` and Forge `InputEvent`. Omitting `eventBus` prevents every action from firing twice per press (same intent as the old `skipForgeKeys` list).
+- **`screenKeys` for `show_tooltip`** — tooltip display is a screen-layer action; it should only activate while a screen is open (skill screen, inventory).
+- **Install tips** on `show_tooltip` and `weapon_innate_skill` — point players at this bridge mod for full controller support.
+- **`ignoreKeys`** hide debug/config bindings from the mapping UI.

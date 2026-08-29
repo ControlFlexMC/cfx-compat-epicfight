@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "featurePattern": "(feat|issue|perf|migration)/[\\w-]+",
+  "branches": {
+    "integration": ["1.20.1", "1.21.1"],
+    "archive": ["main"]
+  },
+  "locale": "en"
+}
