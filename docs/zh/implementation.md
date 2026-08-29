@@ -191,9 +191,9 @@ if (state == null) return fallbackVanillaInput();
 
 ## Compat JSON 要点
 
-附带的 `epicfight_keys.json` 承担了按键路由的主要工作。关键设计：
+附带的 `epicfight.json` 承担了按键路由的主要工作（ControlFlex 0.8.7 schema）。关键设计：
 
-- **所有战斗动作使用 `skipForgeKeys`** — Epic Fight 同时监听 `KeyMapping.setPressed()` 和 Forge `InputEvent`。不用 `skipForgeKeys` 会导致每次按键触发两次。
-- **guard 使用 `specialActionKeys` + `PHASE_PERSISTENT`** — 打开界面（背包等）时防御必须保持按住，否则玩家掉防受伤。
-- **`itemSuppressKeys`** — 战斗模式下持双手武器时抑制原版 `attack`，防止 Epic Fight 的攻击系统与原版左键冲突。
-- **`guiKeys` 给 `show_tooltip`** — 技能提示是 GUI 层动作，仅在有界面打开（技能界面、背包）时激活。
+- **战斗动作写在 `inGameKeys`，`channels: ["keyMapping"]`** — Epic Fight 同时监听 `KeyMapping.setPressed()` 和 Forge `InputEvent`。不包含 `eventBus` 可避免每次按键触发两次（与旧 `skipForgeKeys` 意图相同）。
+- **`screenKeys` 给 `show_tooltip`** — 技能提示是界面层动作，仅在有界面打开（技能界面、背包）时激活。
+- **`show_tooltip` 与 `weapon_innate_skill` 的 tips** — 提示安装本桥接模组以获得完整手柄支持。
+- **`ignoreKeys`** — 从绑定界面隐藏调试/配置键。

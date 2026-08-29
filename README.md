@@ -19,7 +19,7 @@ Epic Fight uses its own controller input system (`IEpicFightControllerMod`). Wit
 |---------|-----|
 | **Controller input injection** | Registers ControlFlex as Epic Fight's controller mod. Stick → `PlayerInputState`, actions → `ControllerBinding`, all through Epic Fight's native API. |
 | **Battle mode state sync** | Detects `ChangePlayerModeEvent` and pushes `epicfight:battle_mode` to ControlFlex, enabling `playerState` conditions in compat JSON (e.g. suppress "use" while holding certain weapons in battle mode). |
-| **Compat & guide deployment** | Ships `epicfight_keys.json` (key routing, `skipForgeKeys`, `itemSuppressKeys`) and `epicfight_guid.json` (binding suggestions for new players). |
+| **Compat & guide deployment** | Ships `epicfight.json` (key routing, `inGameKeys` channels, `screenKeys`) and `epicfight_guid.json` (binding suggestions for new players). |
 
 ## How It Works
 
@@ -34,7 +34,7 @@ The bridge implements `IEpicFightControllerMod` and uses Mixin `@Overwrite` on `
 
 ## Requirements
 
-- **ControlFlex** ≥ 0.8.5
+- **ControlFlex** ≥ 0.8.7
 - **Epic Fight** ≥ 20.14 (Minecraft 1.20.1, Forge)
 - **Mixin** 0.8.5 (bundled by Forge)
 
@@ -44,7 +44,7 @@ The bridge implements `IEpicFightControllerMod` and uses Mixin `@Overwrite` on `
 
 ## Install
 
-Place the mod JAR in `mods/` alongside ControlFlex and Epic Fight. On first launch the bridge deploys its compat/guide configs to `config/controlflex/compat/cfx-mod/` and `config/controlflex/guides/cfx-mod/`.
+Place the mod JAR in `mods/` alongside ControlFlex and Epic Fight. On first launch the bridge deploys its compat/guide configs to `config/controlflex/compat/mods/` and `config/controlflex/guides/mods/`. The bundled `epicfight.json` is SHA-1-aligned into `compat/mods/` on every launch (hand-edits there are overwritten). Leftover `epicfight_keys.json` in that folder is deleted. Copy the file to `compat/user/` if you want a local override.
 
 ## Documentation
 

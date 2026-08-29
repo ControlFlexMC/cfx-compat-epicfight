@@ -28,7 +28,7 @@ Without this mod, Epic Fight **cannot see your controller** — even with Contro
 
 | Mod | Version |
 |-----|---------|
-| [ControlFlex](https://www.curseforge.com/minecraft/mc-mods/controlflex) | ≥ 0.8.5 |
+| [ControlFlex](https://www.curseforge.com/minecraft/mc-mods/controlflex) | ≥ 0.8.7 |
 | [Epic Fight](https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod) | ≥ 20.14 |
 
 ---

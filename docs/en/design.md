@@ -66,10 +66,10 @@ Three layers, with the bridge in the middle:
 ### CfxEpicFightPlugin — ControlFlex SPI plugin
 
 - Implements `IControlFlexPlugin` for lifecycle integration:
-  - `onInstallCompatConfigs` → deploys `epicfight_keys.json` to `config/controlflex/compat/cfx-mod/`.
-  - `onInstallGuideAssets` → deploys `epicfight_guid.json` to `config/controlflex/guides/cfx-mod/`.
+  - `onInstallCompatConfigs` → deploys `epicfight.json` to `config/controlflex/compat/mods/`. That file is SHA-1-aligned with the bundled resource on every launch; leftover `epicfight_keys.json` in `mods/` is deleted. `compat/user/` is not modified.
+  - `onInstallGuideAssets` → deploys `epicfight_guid.json` to `config/controlflex/guides/mods/`.
   - `onControlFlexReady` → initializes the state bridge after API providers are available.
-- Version-checks the ControlFlex API at `0.8.5`.
+- Version-checks the ControlFlex API at `0.8.7`.
 
 ### CfxEpicFightControllerMod — Controller mod implementation
 

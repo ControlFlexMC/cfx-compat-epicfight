@@ -19,7 +19,7 @@ Epic Fight 有自己的手柄输入系统（`IEpicFightControllerMod` 接口）�
 |------|----------|
 | **控制器输入注入** | 将 ControlFlex 注册为 Epic Fight 的控制器模组。摇杆 → `PlayerInputState`，动作 → `ControllerBinding`，全程走 Epic Fight 原生 API。 |
 | **战斗模式状态同步** | 监听 `ChangePlayerModeEvent`，实时推送 `epicfight:battle_mode` 到 ControlFlex，使 compat JSON 中的 `playerState` 条件生效（如在战斗模式下持特定武器时抑制"使用"键）。 |
-| **部署 compat 与 guide 配置** | 附带 `epicfight_keys.json`（按键路由、`skipForgeKeys`、`itemSuppressKeys`）和 `epicfight_guid.json`（新手手柄绑定引导）。 |
+| **部署 compat 与 guide 配置** | 附带 `epicfight.json`（按键路由、`inGameKeys` 通道、`screenKeys`）和 `epicfight_guid.json`（新手手柄绑定引导）。 |
 
 ## 工作原理
 
@@ -34,7 +34,7 @@ Epic Fight 有自己的手柄输入系统（`IEpicFightControllerMod` 接口）�
 
 ## 前置模组
 
-- **ControlFlex** ≥ 0.8.5
+- **ControlFlex** ≥ 0.8.7
 - **Epic Fight** ≥ 20.14（Minecraft 1.20.1, Forge）
 - **Mixin** 0.8.5（Forge 内置）
 
@@ -44,7 +44,7 @@ Epic Fight 有自己的手柄输入系统（`IEpicFightControllerMod` 接口）�
 
 ## 安装
 
-将模组 JAR 放入 `mods/` 目录，与 ControlFlex 和 Epic Fight 并列。首次启动时，桥接模组会将 compat/guide 配置部署到 `config/controlflex/compat/cfx-mod/` 和 `config/controlflex/guides/cfx-mod/`。
+将模组 JAR 放入 `mods/` 目录，与 ControlFlex 和 Epic Fight 并列。首次启动时，桥接模组会将 compat/guide 配置部署到 `config/controlflex/compat/mods/` 和 `config/controlflex/guides/mods/`。打包的 `epicfight.json` 每次启动都会按 SHA-1 对齐到 `compat/mods/`（该目录下手改会被覆盖）。残留的 `epicfight_keys.json` 会被删除。若要本地覆盖，请把文件拷到 `compat/user/`。
 
 ## 文档
 
