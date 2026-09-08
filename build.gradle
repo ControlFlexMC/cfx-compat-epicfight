@@ -44,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.ControlFlexMC:control-flex-api:0.8.7'
+    compileOnly 'com.github.ControlFlexMC:control-flex-api:0.8.8'
     // EpicFight 20.14.17 for Minecraft 1.20.1 Forge
     // https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod/files/7789099
     compileOnly 'curse.maven:epicfight-405076:7789099'
