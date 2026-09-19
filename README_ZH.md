@@ -34,7 +34,7 @@ Epic Fight 有自己的手柄输入系统（`IEpicFightControllerMod` 接口）�
 
 ## 前置模组
 
-- **ControlFlex** ≥ 0.8.7
+- **ControlFlex** ≥ 0.8.8
 - **Epic Fight** ≥ 21.15（Minecraft 1.21.1, NeoForge）
 - **Mixin** 0.8.5（NeoForge 内置）
 

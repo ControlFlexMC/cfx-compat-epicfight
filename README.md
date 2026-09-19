@@ -34,7 +34,7 @@ The bridge implements `IEpicFightControllerMod` and uses Mixin `@Overwrite` on `
 
 ## Requirements
 
-- **ControlFlex** ≥ 0.8.7
+- **ControlFlex** ≥ 0.8.8
 - **Epic Fight** ≥ 21.15 (Minecraft 1.21.1, NeoForge)
 - **Mixin** 0.8.5 (bundled by NeoForge)
 

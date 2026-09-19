@@ -3,6 +3,7 @@ package com.ifels.cfx.epicfight;
 import com.ifels.controlflex.api.ControlFlexApi;
 import com.ifels.controlflex.api.ICompatAssetInstaller;
 import com.ifels.controlflex.api.IControlFlexPlugin;
+import com.ifels.controlflex.api.ICameraLookConsumer;
 import com.ifels.controlflex.api.IPlayerStateRegistry;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.loading.FMLPaths;
@@ -22,7 +23,7 @@ public class CfxEpicFightPlugin implements IControlFlexPlugin {
     private static final String GUIDE_RESOURCE = "/assets/cfx_compat_epicfight/guides/epicfight_guid.json";
     private static final String GUIDE_FILE_NAME = "epicfight_guid.json";
     private static final String COMPAT_RESOURCE = "/assets/cfx_compat_epicfight/compat/epicfight.json";
-    private static final String MIN_API_VERSION = "0.8.7";
+    private static final String MIN_API_VERSION = "0.8.8";
 
     private static CfxEpicFightPlugin instance;
 
@@ -30,6 +31,16 @@ public class CfxEpicFightPlugin implements IControlFlexPlugin {
 
     public static CfxEpicFightPlugin getInstance() {
         return instance;
+    }
+
+    /**
+     * Camera turn takeover (0.8.8): when the EF camera is available, register a
+     * consumer that ControlFlex consults before the direct-turn / smooth-turn
+     * channels write to the player's yaw/pitch.
+     */
+    @Override
+    public ICameraLookConsumer cameraLookConsumer() {
+        return (yaw, pitch) -> EpicFightCameraBridge.tryConsumeCameraTurn(yaw, pitch);
     }
 
     @Override
